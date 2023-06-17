@@ -18,8 +18,29 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+from shop import views
+from django.urls import path, include
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.index, name="index"),
+    path('addToCart/<int:i_id>/', views.addToCart, name="addToCart"),
+    path('cart/', views.cart, name="cart"),
+    path('categories/', views.categories, name="categories"),
+    path('contact/', views.contact, name="contact"),
+    path('about/', views.about, name="about"),
+    path('instruments/', views.instruments, name="instruments"),
+    path('add/', views.add, name="add"),
+
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/profile/", views.loginView, name="loginView"),
+    path("logout/", views.logoutView, name="logoutView"),
+
+
+    path("zicani/", views.zicani, name="zicani"),
+    path("duvacki/", views.duvacki, name="duvacki"),
+    path("udarni/", views.udarni, name="udarni"),
+    path("klavijatura/", views.klavijatura, name="klavijatura"),
+
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

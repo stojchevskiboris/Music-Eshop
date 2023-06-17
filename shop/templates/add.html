@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<h1>Додај нов инструмент</h1>
+    <form action="{% url 'add' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <img id="display-img"/>
+        <br>
+        <button class="btn btn-success">Зачувај</button>
+    </form>
+<br>
+<style>
+#display-img{
+    border-collapse: collapse;
+    border: 3px solid gray;
+    border-radius: 15px;
+        margin-bottom: 20px;
+}
+</style>
+
+<script>
+    document.querySelector("label[for='id_category']").textContent = 'Категорија';
+    document.querySelector("label[for='id_type']").textContent = 'Вид';
+    document.querySelector("label[for='id_manufacturer']").textContent = 'Производител';
+    document.querySelector("label[for='id_model']").textContent = 'Модел';
+    document.querySelector("label[for='id_description']").textContent = 'Опис (полето не е задолжително)';
+    document.querySelector("label[for='id_quantity']").textContent = 'Количина';
+    document.querySelector("label[for='id_price']").textContent = 'Цена (во денари)';
+    document.querySelector("label[for='id_image']").textContent = 'Слика';
+
+    const imgInput = document.querySelector("#id_image")
+    const displayImg = document.querySelector("#display-img")
+    imgInput.addEventListener('change',(event)=>{
+        const imgObject = event.target.files[0]
+        displayImg.src = URL.createObjectURL(imgObject)})
+</script>
+
+{% endblock %}

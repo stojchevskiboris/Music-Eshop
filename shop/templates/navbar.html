@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-sm bg-body-tertiary font-bold">
+    <div id="cfl" class="container-fluid">
+        <a id="home" class="navbar-brand" href="{% url 'index' %}" style="padding-top: 9px;"><img id="logoimg" width="50px" src="/data/static/logo-white.png">  Почетна</a>
+                            <a id="categories" class="nav-link active navbar-brand" aria-current="page" href="{% url 'categories' %}">Категории</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto  mb-lg-0">
+                <li class="nav-item">
+{#                    <a id="categories" class="nav-link active navbar-brand" aria-current="page" href="{% url 'categories' %}">Категории</a>#}
+                </li>
+            </ul>
+            <div class="d-flex">
+                <ul class="navbar-nav me-auto  mb-lg-0">
+                    <li class="nav-item">
+                        <a id="contact" class="nav-link active navbar-brand" aria-current="page" href="{% url 'contact' %}">Контакт</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="about" class="nav-link active navbar-brand" aria-current="page" href="{% url 'about' %}">За Нас</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="cart" class="nav-link active navbar-brand" aria-current="page" href="{% url 'cart' %}">Кошничка <img id="cartimg" width="20px" src="/data/static/cart.png"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+    #cfl {
+        --bs-gutter-x: 5rem
+    }
+    .font-bold{
+        font-weight: 500;
+    }
+</style>
+
+

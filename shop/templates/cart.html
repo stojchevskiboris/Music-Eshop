@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    {#        {{ request.session.session_key }}#}
+<div class="row">
+
+
+    {% for i in products %}
+
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{ MEDIA_URL }}{{ i.image.url }}" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">{{ i.manufacturer }} {{ i.model }} {{ i.id }}</h5>
+            </div>
+        </div>
+
+    {% endfor %}
+</div>
+
+    <style>
+        #cart {
+            color: white
+        }
+    </style>
+
+    <script>
+        document.getElementById("cartimg").src = "/data/static/cart-white.png";
+    </script>
+{% endblock %}

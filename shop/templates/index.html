@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+    {% if user.is_authenticated %}
+        <div class="text-end py-4">
+            <span>{{ request.user }}</span>
+            <img width="30px" src="/data/static/user.png">
+            <a href="{% url 'logoutView' %}" class="btn btn-danger"> Одјави се</a>
+            <a href="{% url 'add' %}" class="btn btn-primary"> Додај производ</a>
+        </div>
+    {% else %}
+        <div class="text-end py-4">
+            <img width="30px" src="/data/static/user.png">
+            <a href="{% url 'login' %}" class="btn btn-primary"> Најави се</a>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-6 imgDiv">
+            <img class="img1" src="/data/static/brands.png">
+        </div>
+        <div class="col-6 centerY banner1">
+            <p>Почуствувај</p>
+            <p>ја музиката</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 imgDiv">
+            <img class="img1" src="/data/static/manPlaying.png">
+        </div>
+        <div class="col-6 centerY r2">
+            <p class="banner2">Одбери од над стотици достапни инструменти</p>
+            <a href="{% url 'categories' %}" class="btn btn-primary btn2">Одбери го твојот <br>инструмент</a>
+        </div>
+    </div>
+
+    <style>
+        .img1 {
+            max-width: 30vw;
+            max-height: 35vh;
+        }
+
+        #home {
+            color: white;
+        }
+
+        .centerY {
+            align-self: center;
+        }
+
+        .banner1 {
+            font-weight: 400;
+            text-align: center;
+            font-size: 2.6rem;
+            text-shadow: 10px 10px 10px gray;
+        }
+
+        .banner2 {
+            font-size: 1.5rem;
+        }
+
+        .imgDiv {
+            text-align: center;
+        }
+
+        .r2 {
+            text-align: center;
+        }
+
+        .btn2 {
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        document.getElementById("logoimg").src = "/data/static/logo-white.png";
+    </script>
+
+{% endblock %}

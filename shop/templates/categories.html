@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block content %}
+    <br>
+    <div class="row">
+        <div class="col-3">
+            <a href="{% url 'zicani' %}" class="tdn">
+            <div class="card1">
+                <br>
+                <h4 class="text-center"><b>Жичани</b></h4>
+                <br>
+                <p>Виолина</p>
+                <p>Гитара</p>
+                <p>Контрабас</p>
+                <p>Харфа</p>
+                <p>Мандолина</p>
+                <p>Виолончело</p>
+                <div class="imgdiv2">
+                    <img class="img2" src="/data/images/guitar.png">
+                </div>
+                <br>
+            </div>
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{% url 'duvacki' %}" class="tdn">
+            <div class="card1">
+                <br>
+                <h4 class="text-center"><b>Дувачки</b></h4>
+                <br>
+                <p>Флејта</p>
+                <p>Кларинет</p>
+                <p>Труба</p>
+                <p>Саксофон</p>
+                <p>‎</p>
+                <p>‎</p>
+
+                <div class="imgdiv2">
+                    <img class="img2" src="/data/images/truba.PNG">
+                </div>
+                <br>
+            </div>
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{% url 'udarni' %}" class="tdn">
+            <div class="card1">
+                <br>
+                <h4 class="text-center"><b>Ударни</b></h4>
+                <br>
+                <p>Тапани</p>
+                <p>Ксилофон</p>
+                <p>Кахони</p>
+                <p>‎</p>
+                <p>‎</p>
+                <p>‎</p>
+                <div class="imgdiv2">
+                    <img class="img2" src="/data/images/drums.png">
+                </div>
+                <br>
+            </div>
+            </a>
+        </div>
+        <div class="col-3">
+            <a href="{% url 'klavijatura' %}" class="tdn">
+            <div class="card1">
+                <br>
+                <h4 class="text-center"><b>Клавијатура</b></h4>
+                <br>
+                <p>Пијано</p>
+                <p>Хармоника</p>
+                <p>Синтисајзер</p>
+                <p>‎</p>
+                <p>‎</p>
+                <p>‎</p>
+                <div class="imgdiv2">
+                    <img class="img2" src="/data/images/piano2.PNG">
+                </div>
+                <br>
+            </div>
+            </a>
+        </div>
+
+    </div>
+
+
+
+    <style>
+        body {
+            background-position: center;
+            background-image: url("/data/static/brands.png");
+            background-repeat: no-repeat;
+            background-blend-mode: soft-light;
+
+        }
+
+        .card1 {
+            box-shadow: 3px 3px 10px gray;
+            width: 18vw;
+            background-color: #ace3f782;
+            border: 2px solid gray;
+            border-radius: 15px;
+            min-width: fit-content;
+        }
+
+        .card1:hover {
+            border: 3px solid white;
+        }
+
+        .card1 p {
+            margin-bottom: 0px;
+            font-weight: 500;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .card1{
+            cursor: pointer;
+        }
+
+        #categories {
+            color: white
+        }
+
+        .imgdiv2 {
+            text-align: center;
+        }
+
+        .img2 {
+            width: 80%;
+
+        }
+        .tdn{
+            text-decoration: none;
+            color: black;
+        }
+    </style>
+{% endblock %}
