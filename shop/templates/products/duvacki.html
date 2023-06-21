@@ -1,6 +1,94 @@
 {% extends 'base.html' %}
 {% block content %}
 
-t
+
+    <nav class="mt-1" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'categories' %}">Категории</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Дувачки Инструменти</li>
+        </ol>
+    </nav>
+
+    <h2 class="text-center">Дувачки Инструменти</h2>
+
+    <br>
+
+    <div class="row">
+        <div class="col"><a class="tdn" href="{% url 'flejta' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Флејта</h5>
+                </div>
+                <img src="/data/images/flejta.PNG" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+        <div class="col"><a class="tdn" href="{% url 'klarinet' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Кларинет</h5>
+                </div>
+                <img src="/data/images/klarinet.PNG" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+        <div class="col"><a class="tdn" href="{% url 'truba' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Труба</h5>
+                </div>
+                <img src="/data/images/truba.PNG" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col"><a class="tdn" href="{% url 'saksofon' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Саксофон</h5>
+                </div>
+                <img src="/data/images/saksofon.PNG" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+
+
+    <style>
+        .card {
+            background-color: #caf1ff;
+        }
+
+        .card {
+            box-shadow: 3px 3px 10px gray;
+            width: 18vw;
+            background-color: #ace3f782;
+            border: 2px solid gray;
+            border-radius: 15px;
+            min-width: fit-content;
+        }
+
+        .card:hover {
+            border: 3px solid white;
+        }
+
+        .tdn {
+            text-decoration: none;
+            color: black;
+        }
+
+        .card-img, .card-img-bottom {
+            width: inherit;
+        }
+
+        .row {
+            text-align: -moz-center;
+            text-align: -webkit-center;
+        }
+    </style>
 
 {% endblock %}

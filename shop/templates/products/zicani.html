@@ -1,6 +1,109 @@
 {% extends 'base.html' %}
 {% block content %}
 
-t
+
+    <nav class="mt-1" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'categories' %}">Категории</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Жичани Инструменти</li>
+        </ol>
+    </nav>
+
+    <h2 class="text-center">Жичани Инструменти</h2>
+
+    <br>
+
+    <div class="row">
+        <div class="col"><a class="tdn" href="{% url 'violina' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Виолина</h5>
+                </div>
+                <img src="/data/images/violin.png" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+        <div class="col"><a class="tdn" href="{% url 'gitara' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Гитара</h5>
+                </div>
+                <img src="/data/images/guitar.png" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+        <div class="col"><a class="tdn" href="{% url 'kontrabas' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Контрабас</h5>
+                </div>
+                <img src="/data/images/contrabass.png" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col"><a class="tdn" href="{% url 'harfa' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Харфа</h5>
+                </div>
+                <img src="/data/images/harp.png" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+        <div class="col"><a class="tdn" href="{% url 'mandolina' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Мандолина</h5>
+                </div>
+                <img src="/data/images/mandolin.png" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+        <div class="col"><a class="tdn" href="{% url 'violoncelo' %}">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="text-center card-title">Виолончело</h5>
+                </div>
+                <img src="/data/images/violoncello.png" class="card-img-bottom" alt="...">
+            </div>
+        </a>
+        </div>
+    </div>
+
+
+    <style>
+        .card {
+            background-color: #caf1ff;
+        }
+
+        .card {
+            box-shadow: 3px 3px 10px gray;
+            width: 18vw;
+            background-color: #ace3f782;
+            border: 2px solid gray;
+            border-radius: 15px;
+            min-width: fit-content;
+        }
+
+        .card:hover {
+            border: 3px solid white;
+        }
+
+        .tdn {
+            text-decoration: none;
+            color: black;
+        }
+
+        .card-img, .card-img-bottom {
+            width: inherit;
+        }
+        .row{
+            text-align: -moz-center;
+            text-align: -webkit-center;
+        }
+    </style>
 
 {% endblock %}

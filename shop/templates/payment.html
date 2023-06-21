@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <form action="{% url 'payment' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <br>
+        <button class="btn btn-success">Нарачај</button>
+    </form>
+
+{#    <a href="{% url 'final' %}" class="btn btn-success">Нарачај</a>#}
+<script>
+    document.querySelector("label[for='id_name']").textContent = 'Име';
+    document.querySelector("label[for='id_surname']").textContent = 'Презиме';
+    document.querySelector("label[for='id_email']").textContent = 'Е-маил';
+    document.querySelector("label[for='id_phone']").textContent = 'Телефон';
+    document.querySelector("label[for='id_city']").textContent = 'Град';
+    document.querySelector("label[for='id_municipality']").textContent = 'Општина';
+    document.querySelector("label[for='id_address']").textContent = 'Адреса';
+    document.querySelector("label[for='id_paymenttype']").textContent = 'Вид на плаќање';
+    document.querySelector("label[for='id_cardholdername']").textContent = 'Cardholder Name';
+    document.querySelector("label[for='id_cardnumber']").textContent = 'Card number (16 digits)';
+    document.querySelector("label[for='id_cardexpiry']").textContent = 'Expiry date';
+    document.querySelector("label[for='id_cardcvv']").textContent = 'CVV';
+
+</script>
+{% endblock %}

@@ -20,6 +20,7 @@
 </style>
 
 <script>
+    document.getElementById("id_category").setAttribute("onchange","changeFc()")
     document.querySelector("label[for='id_category']").textContent = 'Категорија';
     document.querySelector("label[for='id_type']").textContent = 'Вид';
     document.querySelector("label[for='id_manufacturer']").textContent = 'Производител';
@@ -34,6 +35,39 @@
     imgInput.addEventListener('change',(event)=>{
         const imgObject = event.target.files[0]
         displayImg.src = URL.createObjectURL(imgObject)})
+    var items =   '<option value="Violina">Виолина</option>'+
+                  '<option value="Gitara" selected>Гитара</option>'+
+                  '<option value="Kontrabas">Контрабас</option>'+
+                  '<option value="Harfa">Харфа</option>'+
+                  '<option value="Mandolina">Мандолина</option>'+
+                  '<option value="Violoncelo">Виолончело</option>'
+    document.getElementById("id_type").innerHTML=items
+
+    function changeFc(){
+        var category = document.getElementById("id_category").value
+        if (category === "Zhichani"){
+            items ='<option value="Violina">Виолина</option>'+
+                   '<option value="Gitara" selected>Гитара</option>'+
+                   '<option value="Kontrabas">Контрабас</option>'+
+                   '<option value="Harfa">Харфа</option>'+
+                   '<option value="Mandolina">Мандолина</option>'+
+                   '<option value="Violoncelo">Виолончело</option>'
+        } else if (category === "Duvachki"){
+            items ='<option value="Flejta" selected>Флејта</option>'+
+                   '<option value="Klarinet">Кларинет</option>'+
+                   '<option value="Truba">Труба</option>'+
+                   '<option value="Saksofon">Саксофон</option>'
+        } else if (category === "Udarni"){
+            items ='<option value="Tapani" selected>Тапани</option>'+
+                   '<option value="Ksilofon">Ксилофон</option>'+
+                   '<option value="Kahoni">Кахони</option>'
+        } else if (category === "Klavijatura"){
+            items ='<option value="Pijano" selected>Пијано</option>'+
+                   '<option value="Harmonika">Хармоника</option>'+
+                   '<option value="Sintisajzer">Синтисајзер</option>'
+        }
+        document.getElementById("id_type").innerHTML=items
+    }
 </script>
 
 {% endblock %}

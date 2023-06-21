@@ -1,11 +1,84 @@
 {% extends 'base.html' %}
 {% block content %}
 
+    <br>
+    <div class="text-center">
+        <h1>Имате некакво прашање?</h1>
+
+        <form>
+            <label class="form-label" for="name">Име и презиме</label>
+            <input class="form-control" id="name" type="text" required>
+            <br>
+            <label class="form-label" for="email">Е-пошта</label>
+            <input class="form-control" id="email" type="email" required>
+            <br>
+            <label class="form-label" for="message">Вашата порака</label>
+            <input class="form-control" id="message" type="text" required>
+            <br>
+            <button onclick="send()" class="btn btn-primary" type="button" data-toggle="modal"
+                    data-target="#exampleModal">Испрати
+            </button>
+
+        </form>
+
+    </div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Вашата порака е испратена</h4>
+                    <button onclick="closeMd()"  type="button" class="btn" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="closeMd()" id="close" type="button" class="btn btn-outline-dark"
+                    >Во ред
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
     <style>
+        h1 {
+            font-style: italic;
+        }
+
+        .form-label {
+            float: left;
+            font-weight: bold;
+            font-style: italic;
+        }
+
         #contact {
             color: white
         }
     </style>
+
+    <script>
+        function send() {
+            var name = document.getElementById("name").value
+            var email = document.getElementById("email").value
+            var message = document.getElementById("message").value
+            if (name != "" && email != "" && message != "") {
+                console.log("test")
+                $('#myModal').modal('show');
+            }
+        }
+
+        function closeMd() {
+            $('#myModal').modal('hide');
+            var name = document.getElementById("name").value = ""
+            var email = document.getElementById("email").value = ""
+            var message = document.getElementById("message").value = ""
+        }
+
+
+    </script>
 
 {% endblock %}

@@ -11,8 +11,27 @@ class Instrument(models.Model):
         UDARNI = "Udarni", "Ударни"
         KLAVIJATURA = "Klavijatura", "Клавијатура"
 
+    class Types(models.TextChoices):
+        VIOLINA = "Violina", "Виолина"
+        GITARA = "Gitara", "Гитара"
+        KONTRABAS = "Kontrabas", "Контрабас"
+        HARFA = "Harfa", "Харфа"
+        MANDOLINA = "Mandolina", "Мандолина"
+        VIOLONCELO = "Violoncelo", "Виолончело"
+        FLEJTA = "Flejta", "Флејта"
+        KLARINET = "Klarinet", "Кларинет"
+        TRUBA = "Truba", "Труба"
+        SAKSOFON = "Saksofon", "Саксофон"
+        TAPANI = "Tapani", "Тапани"
+        KSILOFON = "Ksilofon", "Ксилофон"
+        KAHONI = "Kahoni", "Кахони"
+        PIJANO = "Pijano", "Пијано"
+        HARMONIKA = "Harmonika", "Хармоника"
+        SINTISAJZER = "Sintisajzer", "Синтисајзер"
+
     category = models.CharField(max_length=11, choices=Categories.choices, default=Categories.ZHICHANI)
-    type = models.CharField(max_length=80)
+    type = models.CharField(max_length=12, choices=Types.choices, default=Types.GITARA)
+    # type = models.CharField(max_length=80)
     manufacturer = models.CharField(max_length=80)
     model = models.CharField(max_length=80)
     description = models.TextField(blank=True, null=True)
