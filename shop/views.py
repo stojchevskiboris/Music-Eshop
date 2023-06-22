@@ -4,9 +4,8 @@ from django.contrib.sessions.models import Session
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.contrib.auth.models import AnonymousUser, User
 from .forms import InstrumentForm, CustomerForm
+from django.contrib.auth.decorators import login_required
 
-
-# Create your views here.
 
 def index(request):
     if request.user.is_anonymous:
@@ -22,8 +21,19 @@ def addToCart(request, i_id):
     newItem.save()
     return redirect('cart')
 
+def deleteFromCart(request, i_id):
+    session = request.session.session_key
+    instrumentToDelete = Instrument.objects.filter(pk=i_id)[0]
+    print(instrumentToDelete)
+    deleteItem = Cart.objects.filter(usersession=session, instrument=instrumentToDelete).all()
+    deleteItem.delete()
+    return redirect('cart')
+
 
 def cart(request):
+    for row in Cart.objects.all().reverse():
+        if Cart.objects.filter(usersession=row.usersession).filter(instrument = row.instrument).count() > 1:
+            row.delete()
     user = request.session.session_key
     productids = Cart.objects.filter(usersession=user).values("instrument")
     productids = list(productids)
@@ -51,7 +61,7 @@ def instruments(request):
     context = {"instruments": queryset}
     return render(request, 'instruments.html', context)
 
-
+@login_required
 def add(request):
     if request.method == 'POST':
         form = InstrumentForm(request.POST, request.FILES)

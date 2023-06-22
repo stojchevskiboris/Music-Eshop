@@ -1,73 +1,163 @@
 {% extends 'base.html' %}
 {% block content %}
-<br>
-<h1>Додај нов инструмент</h1>
+    <br>
+    <h1 class="text-center">Додај нов инструмент</h1>
     <form action="{% url 'add' %}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <img id="display-img"/>
-        <br>
-        <button class="btn btn-success">Зачувај</button>
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col">
+
+
+                {% csrf_token %}
+                <p>
+                    <label for="id_category">Категорија</label>
+                    <select name="category" class="form-control form-select" id="id_category" onchange="changeFc()">
+                        <option value="Zhichani" selected="">Жичани</option>
+                        <option value="Duvachki">Дувачки</option>
+                        <option value="Udarni">Ударни</option>
+                        <option value="Klavijatura">Клавијатура</option>
+                    </select>
+                </p>
+
+                <p>
+                    <label for="id_type">Вид</label>
+                    <select name="type" class="form-control form-select" id="id_type">
+                        <option value="Violina">Виолина</option>
+                        <option value="Gitara" selected="">Гитара</option>
+                        <option value="Kontrabas">Контрабас</option>
+                        <option value="Harfa">Харфа</option>
+                        <option value="Mandolina">Мандолина</option>
+                        <option value="Violoncelo">Виолончело</option>
+                    </select>
+                </p>
+
+                <p>
+                    <label for="id_manufacturer">Производител</label>
+                    <input type="text" name="manufacturer" maxlength="80" class="form-control" required=""
+                           id="id_manufacturer">
+                </p>
+
+                <p>
+                    <label for="id_model">Модел</label>
+                    <input type="text" name="model" maxlength="80" class="form-control" required="" id="id_model">
+                </p>
+
+                <p>
+                    <label for="id_description">Опис (полето не е задолжително)</label>
+                    <textarea name="description" cols="40" rows="10" class="form-control"
+                              id="id_description"></textarea>
+                </p>
+            </div>
+            <div class="col">
+                <p>
+                    <label for="id_quantity">Количина</label>
+                    <input type="number" min="1" name="quantity" class="form-control" required="" id="id_quantity">
+                </p>
+
+                <p>
+                    <label for="id_price">Цена (во денари)</label>
+                    <input type="number" min="1" name="price" class="form-control" required="" id="id_price">
+                </p>
+
+                <p>
+                    <label for="id_image">Слика</label>
+                    <input type="file" name="image" accept="image/*" class="form-control" id="id_image">
+                </p>
+                <img id="display-img"/>
+                <br>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <a class="mt-3 b1 btn btn-secondary" href="{% url 'index' %}">Назад</a>
+            </div>
+            <div class="col">
+                <button class="b2 btn btn-success">Зачувај</button>
+            </div>
+        </div>
+
     </form>
-<br>
-<style>
-#display-img{
-    border-collapse: collapse;
-    border: 3px solid gray;
-    border-radius: 15px;
-        margin-bottom: 20px;
-}
-</style>
 
-<script>
-    document.getElementById("id_category").setAttribute("onchange","changeFc()")
-    document.querySelector("label[for='id_category']").textContent = 'Категорија';
-    document.querySelector("label[for='id_type']").textContent = 'Вид';
-    document.querySelector("label[for='id_manufacturer']").textContent = 'Производител';
-    document.querySelector("label[for='id_model']").textContent = 'Модел';
-    document.querySelector("label[for='id_description']").textContent = 'Опис (полето не е задолжително)';
-    document.querySelector("label[for='id_quantity']").textContent = 'Количина';
-    document.querySelector("label[for='id_price']").textContent = 'Цена (во денари)';
-    document.querySelector("label[for='id_image']").textContent = 'Слика';
-
-    const imgInput = document.querySelector("#id_image")
-    const displayImg = document.querySelector("#display-img")
-    imgInput.addEventListener('change',(event)=>{
-        const imgObject = event.target.files[0]
-        displayImg.src = URL.createObjectURL(imgObject)})
-    var items =   '<option value="Violina">Виолина</option>'+
-                  '<option value="Gitara" selected>Гитара</option>'+
-                  '<option value="Kontrabas">Контрабас</option>'+
-                  '<option value="Harfa">Харфа</option>'+
-                  '<option value="Mandolina">Мандолина</option>'+
-                  '<option value="Violoncelo">Виолончело</option>'
-    document.getElementById("id_type").innerHTML=items
-
-    function changeFc(){
-        var category = document.getElementById("id_category").value
-        if (category === "Zhichani"){
-            items ='<option value="Violina">Виолина</option>'+
-                   '<option value="Gitara" selected>Гитара</option>'+
-                   '<option value="Kontrabas">Контрабас</option>'+
-                   '<option value="Harfa">Харфа</option>'+
-                   '<option value="Mandolina">Мандолина</option>'+
-                   '<option value="Violoncelo">Виолончело</option>'
-        } else if (category === "Duvachki"){
-            items ='<option value="Flejta" selected>Флејта</option>'+
-                   '<option value="Klarinet">Кларинет</option>'+
-                   '<option value="Truba">Труба</option>'+
-                   '<option value="Saksofon">Саксофон</option>'
-        } else if (category === "Udarni"){
-            items ='<option value="Tapani" selected>Тапани</option>'+
-                   '<option value="Ksilofon">Ксилофон</option>'+
-                   '<option value="Kahoni">Кахони</option>'
-        } else if (category === "Klavijatura"){
-            items ='<option value="Pijano" selected>Пијано</option>'+
-                   '<option value="Harmonika">Хармоника</option>'+
-                   '<option value="Sintisajzer">Синтисајзер</option>'
+    <br>
+    <style>
+        .b1 {
+            float: left;
         }
-        document.getElementById("id_type").innerHTML=items
-    }
-</script>
+
+        .b2 {
+            font-weight: bold;
+            font-size: 2rem;
+        }
+
+        #display-img {
+            border-collapse: collapse;
+            border: 3px solid gray;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .row {
+            text-align: -moz-center;
+            text-align: -webkit-center;
+        }
+
+        label {
+            float: left;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+
+
+        const imgInput = document.querySelector("#id_image")
+        const displayImg = document.querySelector("#display-img")
+        imgInput.addEventListener('change', (event) => {
+            document.getElementById("display-img").style.display = 'block'
+            const imgObject = event.target.files[0]
+            displayImg.src = URL.createObjectURL(imgObject)
+        })
+        var items = '<option value="Violina">Виолина</option>' +
+            '<option value="Gitara" selected>Гитара</option>' +
+            '<option value="Kontrabas">Контрабас</option>' +
+            '<option value="Harfa">Харфа</option>' +
+            '<option value="Mandolina">Мандолина</option>' +
+            '<option value="Violoncelo">Виолончело</option>'
+        document.getElementById("id_type").innerHTML = items
+
+        function changeFc() {
+            var category = document.getElementById("id_category").value
+            if (category === "Zhichani") {
+                items = '<option value="Violina">Виолина</option>' +
+                    '<option value="Gitara" selected>Гитара</option>' +
+                    '<option value="Kontrabas">Контрабас</option>' +
+                    '<option value="Harfa">Харфа</option>' +
+                    '<option value="Mandolina">Мандолина</option>' +
+                    '<option value="Violoncelo">Виолончело</option>'
+            } else if (category === "Duvachki") {
+                items = '<option value="Flejta" selected>Флејта</option>' +
+                    '<option value="Klarinet">Кларинет</option>' +
+                    '<option value="Truba">Труба</option>' +
+                    '<option value="Saksofon">Саксофон</option>'
+            } else if (category === "Udarni") {
+                items = '<option value="Tapani" selected>Тапани</option>' +
+                    '<option value="Ksilofon">Ксилофон</option>' +
+                    '<option value="Kahoni">Кахони</option>'
+            } else if (category === "Klavijatura") {
+                items = '<option value="Pijano" selected>Пијано</option>' +
+                    '<option value="Harmonika">Хармоника</option>' +
+                    '<option value="Sintisajzer">Синтисајзер</option>'
+            }
+            document.getElementById("id_type").innerHTML = items
+        }
+
+        $(document).ready(function () {
+            $("#display-img").css({
+                'max-width': ($("#id_price").width() + 'px')
+            });
+        });
+    </script>
 
 {% endblock %}

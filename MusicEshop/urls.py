@@ -29,6 +29,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name="index"),
     path('addToCart/<int:i_id>/', views.addToCart, name="addToCart"),
+    path('deleteFromCart/<int:i_id>/', views.deleteFromCart, name="deleteFromCart"),
     path('cart/', views.cart, name="cart"),
     path('contact/', views.contact, name="contact"),
     path('about/', views.about, name="about"),

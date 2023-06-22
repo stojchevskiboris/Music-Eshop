@@ -1,27 +1,240 @@
 {% extends 'base.html' %}
 {% block content %}
 
+    <br>
+    <div class="row">
+        <div class="col reciept">Сметка бр. 25/7</div>
+        <div class="col header1">Наплата</div>
+        <div class="col"></div>
+    </div>
+
+    <br>
+
+    <div class="row header2">
+        <div class="col">1. Информации и адреса за испорака</div>
+        <div class="col">2. Начин на плаќање</div>
+        <div class="col"></div>
+    </div>
+
+    <br>
+
+
+
     <form action="{% url 'payment' %}" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <br>
-        <button class="btn btn-success">Нарачај</button>
+        <div class="row">
+            <div class="col">
+                {% csrf_token %}
+                <p>
+                    <label for="id_name">Име</label>
+                    <input type="text" name="name" maxlength="50" class="form-control" required="" id="id_name">
+                </p>
+
+                <p>
+                    <label for="id_surname">Презиме</label>
+                    <input type="text" name="surname" maxlength="50" class="form-control" required="" id="id_surname">
+                </p>
+
+                <p>
+                    <label for="id_email">Е-маил</label>
+                    <input type="text" name="email" maxlength="50" class="form-control" required="" id="id_email">
+                </p>
+
+                <p>
+                    <label for="id_phone">Телефон</label>
+                    <input type="text" name="phone" maxlength="50" class="form-control" required="" id="id_phone">
+                </p>
+
+                <p>
+                    <label for="id_city">Град</label>
+                    <input type="text" name="city" maxlength="50" class="form-control" required="" id="id_city">
+                </p>
+
+                <p>
+                    <label for="id_municipality">Општина</label>
+                    <input type="text" name="municipality" maxlength="50" class="form-control" required=""
+                           id="id_municipality">
+                </p>
+
+                <p>
+                    <label for="id_address">Адреса</label>
+                    <input type="text" name="address" maxlength="50" class="form-control" required="" id="id_address">
+                </p>
+            </div>
+
+            <div class="col">
+                <p>
+                    <label for="id_paymenttype">Вид на плаќање</label>
+                    <select onchange="changeFc()" name="paymenttype" class="form-select" id="id_paymenttype">
+                        <option value="Cash" selected>Во готово</option>
+
+                        <option value="Credit">Со кредитна картичка</option>
+
+                        <option value="Bank">Преку банкарска трансакција</option>
+
+                    </select>
+                </p>
+
+                <br>
+                <p>
+                    <input type="text" disabled placeholder="Cardholder Name" name="cardholdername" maxlength="50"
+                           class="form-control" id="id_cardholdername">
+                </p>
+
+                <p>
+                    <input type="text" disabled placeholder="Card number" name="cardnumber" maxlength="16"
+                           class="form-control"
+                           id="id_cardnumber">
+                </p>
+
+                <div class="row">
+                    <div class="col">
+                        <p>
+                            <input type="text" disabled placeholder="MM/YY" name="cardexpiry" maxlength="5"
+                                   class="form-control" id="id_cardexpiry">
+                        </p>
+                    </div>
+                    <div class="col">
+                        <p>
+                            <input type="text" disabled placeholder="CVV" name="cardcvv" maxlength="3"
+                                   class="form-control"
+                                   id="id_cardcvv">
+                        </p>
+                    </div>
+                </div>
+                <br><br>
+                <div class="bankInfo" id="bankInf">
+                    <p><b>Информации за плаќање преку банкарска трансакција</b></p>
+                    <p>Банка: Шпаркасе Банка</p>
+                    <p>Трансакциска с-ка: 250101000660022</p>
+                    <p>Дознака: Уплата за сметка број <i>(Број на сметката)</i></p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="totalPrice">
+                    <p id="t1">Вкупно за наплата:</p>
+                    <p id="t2">26,200 ден</p>
+                </div>
+                <br>
+                <button id="bt2" class="btn btn-success">Нарачај</button>
+            </div>
+
+        </div>
     </form>
+    <br>
+    <a class="btn btn-secondary" href="{% url 'cart' %}">Назад кон кошничка</a>
 
-{#    <a href="{% url 'final' %}" class="btn btn-success">Нарачај</a>#}
-<script>
-    document.querySelector("label[for='id_name']").textContent = 'Име';
-    document.querySelector("label[for='id_surname']").textContent = 'Презиме';
-    document.querySelector("label[for='id_email']").textContent = 'Е-маил';
-    document.querySelector("label[for='id_phone']").textContent = 'Телефон';
-    document.querySelector("label[for='id_city']").textContent = 'Град';
-    document.querySelector("label[for='id_municipality']").textContent = 'Општина';
-    document.querySelector("label[for='id_address']").textContent = 'Адреса';
-    document.querySelector("label[for='id_paymenttype']").textContent = 'Вид на плаќање';
-    document.querySelector("label[for='id_cardholdername']").textContent = 'Cardholder Name';
-    document.querySelector("label[for='id_cardnumber']").textContent = 'Card number (16 digits)';
-    document.querySelector("label[for='id_cardexpiry']").textContent = 'Expiry date';
-    document.querySelector("label[for='id_cardcvv']").textContent = 'CVV';
 
-</script>
+
+    <style>
+        .row {
+            text-align: -moz-center;
+            text-align: -webkit-center;
+        }
+
+        .reciept {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            background-color: lightgray;
+            border: 2px solid black;
+            border-radius: 15px;
+        }
+
+        .header1 {
+            text-align: center;
+            align-self: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        label {
+            font-weight: bold;
+            float: left;
+        }
+
+        .header2 {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .totalPrice {
+            padding-left: 20px;
+            padding-right: 20px;
+            width: max-content;
+            text-align: center;
+            align-self: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            border: 2px solid black;
+            border-radius: 15px;
+        }
+
+        #t1{
+            margin-top: 10px;
+        }
+
+        #t2 {
+            text-align-last: end;
+        }
+
+        #bt2 {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .bankInfo{
+            opacity: 50%;
+            text-align: left;
+            padding: 10px;
+        }
+        .bnk{
+            opacity: 100%;
+            box-shadow: 3px 3px 10px gray;
+            border: 2px solid black;
+            border-radius: 15px;
+        }
+
+
+    </style>
+    <script>
+        function changeFc() {
+            var type = document.getElementById("id_paymenttype").value
+            if (type === "Credit") {
+                document.getElementById("id_cardholdername").removeAttribute("disabled")
+                document.getElementById("id_cardnumber").removeAttribute("disabled")
+                document.getElementById("id_cardexpiry").removeAttribute("disabled")
+                document.getElementById("id_cardcvv").removeAttribute("disabled")
+                document.getElementById("id_cardholdername").setAttribute("required", "")
+                document.getElementById("id_cardnumber").setAttribute("required", "")
+                document.getElementById("id_cardexpiry").setAttribute("required", "")
+                document.getElementById("id_cardcvv").setAttribute("required", "")
+            }
+            if (type !== "Credit"){
+                document.getElementById("id_cardholdername").value = ""
+                document.getElementById("id_cardnumber").value = ""
+                document.getElementById("id_cardexpiry").value = ""
+                document.getElementById("id_cardcvv").value = ""
+                document.getElementById("id_cardholdername").setAttribute("disabled", "")
+                document.getElementById("id_cardnumber").setAttribute("disabled", "")
+                document.getElementById("id_cardexpiry").setAttribute("disabled", "")
+                document.getElementById("id_cardcvv").setAttribute("disabled", "")
+                document.getElementById("id_cardholdername").removeAttribute("required")
+                document.getElementById("id_cardnumber").removeAttribute("required")
+                document.getElementById("id_cardexpiry").removeAttribute("required")
+                document.getElementById("id_cardcvv").removeAttribute("required")
+
+            }
+            if (type === "Bank"){
+                document.getElementById("bankInf").classList.add("bnk")
+            }
+            if (type !== "Bank"){
+                document.getElementById("bankInf").classList.remove("bnk")
+            }
+        }
+
+        $(document).ready(function () {
+            $("#bt2").css({
+                'width': ($("#t1").width() + 40 + 'px')
+            });
+        });
+    </script>
 {% endblock %}

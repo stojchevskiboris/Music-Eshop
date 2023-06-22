@@ -1,40 +1,222 @@
 {% extends 'base.html' %}
 {% block content %}
+    <script>
+        var keys = []
+    </script>
+    <br>
+    <p class="header1">Кошничка (<span id="cartItemsLen">{{ len }}</span>)</p>
+    {% if len > 0 %}
+        <table>
+            <tr>
+                <th>Слика</th>
+                <th>Име на продуктот</th>
+                <th>Количина</th>
+                <th>Единечна цена</th>
+                <th>Вкупна цена</th>
+            </tr>
+            {% for i in products %}
+                <script>
+                    keys.push({{ i.id }})
+                </script>
+                <tr>
+                    <td style="text-align: center;">
+                        <img class="tableImg" src="{{ MEDIA_URL }}{{ i.image.url }}" alt="Card image cap">
+                    </td>
+                    <td>
+                        {{ i.manufacturer }} {{ i.model }}
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input onchange="updateTotal(); checkDiscount() " value="1" min="1" max="{{ i.quantity }}"
+                                   class="form-control edit-items"
+                                   type="number"
+                                   id="qt{{ i.id }}">
+                            <a href="{% url 'deleteFromCart' i.id %}" class="btn btn-danger" id="del{{ i.id }}">x</a>
+                        </div>
+                    </td>
+                    <td class="money">
+                        <span id="price{{ i.id }}">{{ i.price }}</span> МКД
+                    </td>
+                    <td class="money">
+                        <span id="total{{ i.id }}"></span> МКД
+                    </td>
 
-    {#        {{ request.session.session_key }}#}
-    <div class="row">
+                </tr>
+            {% endfor %}
 
-
-        {% for i in products %}
-
-            <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="{{ MEDIA_URL }}{{ i.image.url }}" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">{{ i.manufacturer }} {{ i.model }} {{ i.id }}</h5>
+        </table>
+        <br>
+        <div class="row">
+            <div class="col">
+                <label for="id_discount">Код за попусти</label>
+                <div class="input-group">
+                    <input id="id_discount" type="text" class="form-control">
+                    <button onclick="checkDiscount()" class="btn btn-primary" type="button">Внеси</button>
                 </div>
+                <p id="dc_message">Кодот <span id="codeDc"></span> е успешно внесен</p>
             </div>
+            <div class="col-1"></div>
 
-        {% endfor %}
-        {% if len > 0 %}
-            <a href="{% url 'payment' %}" class="btn btn-success mt-2">Кон плаќање</a>
-        {% else %}
-            <div class="text-center">
-
-
-                <h2 class="mt-4">Вашата кошничка е празна</h2>
-
-                <a href="{% url 'categories' %}" class="btn btn-primary mt-2 mb-4 w-50 fw-bold fs-4">Пребарај производи</a>
+            <div class="col">
+                <table>
+                    <tbody>
+                    <tr>
+                        <td>Износ:</td>
+                        <td class="r1"><span id="totalBefore"></span> МКД</td>
+                    </tr>
+                    <tr>
+                        <td>Попуст (- <span id="dcPercent">0</span>%):</td>
+                        <td class="r1">- <span id="dc_total">0</span> МКД</td>
+                    </tr>
+                    <tr>
+                        <td>Испорака:</td>
+                        <td class="r1">1000 МКД</td>
+                    </tr>
+                    <tr>
+                        <td><b>Вкупно за наплата:</b></td>
+                        <td class="r1"><b><span id="totalAfter"></span> МКД</b></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <a href="{% url 'payment' %}" class="btn btn-success mt-2 pay">Кон плаќање</a>
             </div>
-        {% endif %}
-    </div>
+        </div>
+
+    {% else %}
+
+        <div class="text-center">
+            <h2 class="mt-4">Вашата кошничка е празна</h2>
+            <a href="{% url 'categories' %}" class="btn btn-primary mt-2 mb-4 w-50 fw-bold fs-4">Пребарај производи</a>
+        </div>
+    {% endif %}
+
 
     <style>
         #cart {
             color: white
         }
+
+        .header1 {
+            text-align: center;
+            align-self: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .tableImg {
+            width: 100px;
+            height: 100%;
+        }
+
+        table {
+            font-size: 1.1rem;
+            background-color: white;
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        label {
+            font-size: 1.3rem;
+        }
+
+        th {
+            text-align-last: center;
+        }
+
+        td, th {
+            border: 1px solid #000000;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #ececec;
+        }
+
+        .pay {
+            width: inherit;
+            font-size: 1.5rem;
+        }
+
+        .r1, .money {
+            text-align-last: right;
+
+        }
+
+        #dc_message {
+            display: none;
+        }
+
+        #codeDc {
+            color: blue;
+        }
+
+        .form-control, .btn {
+            border: 1px solid gray;
+        }
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            opacity: 1;
+        }
     </style>
 
     <script>
+        console.log(keys)
         document.getElementById("cartimg").src = "/data/static/cart-white.png";
+
+        function updateTotal() {
+            var totalBefore = 0
+            for (i of keys) {
+                try {
+                    var price = document.getElementById("price" + i).innerText
+
+                    var qty = document.getElementById("qt" + i).value
+                    var total = price * qty
+                    totalBefore += total
+                    document.getElementById("total" + i).textContent = total
+
+                } catch (i) {
+                    continue
+                }
+            }
+            document.getElementById("totalBefore").innerText = totalBefore
+            var discount = document.getElementById("dc_total").innerText
+            console.log(discount)
+            var totalAfter = totalBefore - discount + 1000
+            document.getElementById("totalAfter").innerText = totalAfter
+        }
+
+        updateTotal()
+
+        function checkDiscount() {
+            var discountCodes = ["spring10", "dnick", "10"]
+            var discountTypes = [10, 15, 10]
+            var input = document.getElementById("id_discount").value
+            for (var k = 0; k < discountCodes.length; k++) {
+                if (discountCodes[k] == input) {
+                    var before = document.getElementById("totalBefore").innerText
+                    document.getElementById("dcPercent").innerText = discountTypes[k]
+                    var forDiscount = before * (discountTypes[k] / 100)
+                    document.getElementById("dc_total").innerText = forDiscount
+                    document.getElementById("dc_message").style.display = 'block'
+                    document.getElementById("codeDc").innerText = input
+                }
+
+            }
+            updateTotal()
+        }
+
+
+
+        document.getElementsByClassName('edit-items')[0].oninput = function () {
+            var max = parseInt(this.max);
+
+            if (parseInt(this.value) > max) {
+                this.value = max;
+            }
+        }
+
     </script>
 {% endblock %}
