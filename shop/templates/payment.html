@@ -3,7 +3,7 @@
 
     <br>
     <div class="row">
-        <div class="col reciept">Сметка бр. 25/7</div>
+        <div class="col reciept">Сметка бр. <span id="rec_id">25/7</span></div>
         <div class="col header1">Наплата</div>
         <div class="col"></div>
     </div>
@@ -112,7 +112,7 @@
             <div class="col">
                 <div class="totalPrice">
                     <p id="t1">Вкупно за наплата:</p>
-                    <p id="t2">26,200 ден</p>
+                    <p id="p2"><span id="t2">26,200</span> ден</p>
                 </div>
                 <br>
                 <button id="bt2" class="btn btn-success">Нарачај</button>
@@ -123,8 +123,16 @@
     <br>
     <a class="btn btn-secondary" href="{% url 'cart' %}">Назад кон кошничка</a>
 
+    <script>
+        var total = 0;
+    </script>
+    {% for p in products %}
+        <script>
+            total += {{ p.price }}
+        </script>
+    {% endfor %}
 
-
+    <h1 id="tt"></h1>
     <style>
         .row {
             text-align: -moz-center;
@@ -169,11 +177,11 @@
             border-radius: 15px;
         }
 
-        #t1{
+        #t1 {
             margin-top: 10px;
         }
 
-        #t2 {
+        #p2 {
             text-align-last: end;
         }
 
@@ -181,12 +189,14 @@
             font-weight: bold;
             font-size: 1.5rem;
         }
-        .bankInfo{
+
+        .bankInfo {
             opacity: 50%;
             text-align: left;
             padding: 10px;
         }
-        .bnk{
+
+        .bnk {
             opacity: 100%;
             box-shadow: 3px 3px 10px gray;
             border: 2px solid black;
@@ -196,6 +206,8 @@
 
     </style>
     <script>
+        document.getElementById("t2").innerText = total+1000 // neli, za dostava :)
+        document.getElementById("rec_id").innerText = {{ reciept.reciept }}
         function changeFc() {
             var type = document.getElementById("id_paymenttype").value
             if (type === "Credit") {
@@ -208,7 +220,7 @@
                 document.getElementById("id_cardexpiry").setAttribute("required", "")
                 document.getElementById("id_cardcvv").setAttribute("required", "")
             }
-            if (type !== "Credit"){
+            if (type !== "Credit") {
                 document.getElementById("id_cardholdername").value = ""
                 document.getElementById("id_cardnumber").value = ""
                 document.getElementById("id_cardexpiry").value = ""
@@ -223,10 +235,10 @@
                 document.getElementById("id_cardcvv").removeAttribute("required")
 
             }
-            if (type === "Bank"){
+            if (type === "Bank") {
                 document.getElementById("bankInf").classList.add("bnk")
             }
-            if (type !== "Bank"){
+            if (type !== "Bank") {
                 document.getElementById("bankInf").classList.remove("bnk")
             }
         }

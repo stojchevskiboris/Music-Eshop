@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Instrument, Cart
+from .models import Instrument, Cart, Order, Reciept
 from django.contrib.sessions.models import Session
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.contrib.auth.models import AnonymousUser, User
@@ -21,6 +21,7 @@ def addToCart(request, i_id):
     newItem.save()
     return redirect('cart')
 
+
 def deleteFromCart(request, i_id):
     session = request.session.session_key
     instrumentToDelete = Instrument.objects.filter(pk=i_id)[0]
@@ -31,8 +32,9 @@ def deleteFromCart(request, i_id):
 
 
 def cart(request):
+
     for row in Cart.objects.all().reverse():
-        if Cart.objects.filter(usersession=row.usersession).filter(instrument = row.instrument).count() > 1:
+        if Cart.objects.filter(usersession=row.usersession).filter(instrument=row.instrument).count() > 1:
             row.delete()
     user = request.session.session_key
     productids = Cart.objects.filter(usersession=user).values("instrument")
@@ -40,8 +42,40 @@ def cart(request):
     productids = [o['instrument'] for o in productids]
     products = Instrument.objects.filter(pk__in=productids)
     len = products.count()
+    test = Reciept.objects.filter(session=user).count()
+    if test == 0:
+        recLen = Reciept.objects.count()
+        reciept = Reciept(session=user, reciept=recLen+1)
+        reciept.save()
+
     context = {"user": user, "products": products, "len": len}
     return render(request, "cart.html", context)
+
+
+def payment(request):
+    if request.method == 'POST':
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            customer = form.save(commit=False)
+            customer.customersession = request.session.session_key
+            form.save()
+            return redirect('final')
+    else:
+        user = request.session.session_key
+        productids = Cart.objects.filter(usersession=user).values("instrument")
+        productids = list(productids)
+        productids = [o['instrument'] for o in productids]
+        products = Instrument.objects.filter(pk__in=productids)
+        form = CustomerForm()
+        reciept = Reciept.objects.filter(session=user).first()
+        print(reciept)
+    context = {"form": form, "products":products, "reciept":reciept}
+    return render(request, 'payment.html', context)
+
+
+def final(request):
+    # order = Order(customer=)
+    return render(request, 'final.html')
 
 
 def categories(request):
@@ -61,6 +95,7 @@ def instruments(request):
     context = {"instruments": queryset}
     return render(request, 'instruments.html', context)
 
+
 @login_required
 def add(request):
     if request.method == 'POST':
@@ -74,25 +109,6 @@ def add(request):
 
     context = {"form": form}
     return render(request, 'add.html', context)
-
-
-def payment(request):
-    if request.method == 'POST':
-        form = CustomerForm(request.POST)
-        if form.is_valid():
-            customer = form.save(commit=False)
-            customer.customersession = request.session.session_key
-            form.save()
-            return redirect('final')
-    else:
-        form = CustomerForm()
-
-    context = {"form": form}
-    return render(request, 'payment.html', context)
-
-
-def final(request):
-    return render(request, 'final.html')
 
 
 def loginView(request):
@@ -176,7 +192,6 @@ def ksilofon(request):
 
 def kahoni(request):
     return render(request, 'products/udarni/kahoni.html')
-
 
 
 def harmonika(request):
