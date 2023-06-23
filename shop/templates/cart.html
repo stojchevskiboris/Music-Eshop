@@ -10,9 +10,10 @@
             <tr>
                 <th>Слика</th>
                 <th>Име на продуктот</th>
-                <th>Количина</th>
-                <th>Единечна цена</th>
-                <th>Вкупна цена</th>
+{#                <th>Количина</th>#}
+                <th>Цена</th>
+                <th></th>
+{#                <th>Вкупна цена</th>#}
             </tr>
             {% for i in products %}
                 <script>
@@ -25,20 +26,25 @@
                     <td>
                         {{ i.manufacturer }} {{ i.model }}
                     </td>
-                    <td>
-                        <div class="input-group">
-                            <input onchange="updateTotal(); checkDiscount() " value="1" min="1" max="{{ i.quantity }}"
-                                   class="form-control edit-items"
-                                   type="number"
-                                   id="qt{{ i.id }}">
-                            <a href="{% url 'deleteFromCart' i.id %}" class="btn btn-danger" id="del{{ i.id }}">x</a>
-                        </div>
-                    </td>
+{#                    <td>#}
+{#                        <div class="input-group">#}
+{#                            <input onchange="updateTotal(); checkDiscount() " value="1" min="1" max="{{ i.quantity }}"#}
+{#                                   class="form-control edit-items"#}
+{#                                   type="number"#}
+{#                                   id="qt{{ i.id }}">#}
+{#                            <a href="{% url 'deleteFromCart' i.id %}" class="btn btn-danger" id="del{{ i.id }}">x</a>#}
+{#                        </div>#}
+{#                    </td>#}
                     <td class="money">
                         <span id="price{{ i.id }}">{{ i.price }}</span> МКД
                     </td>
-                    <td class="money">
-                        <span id="total{{ i.id }}"></span> МКД
+{#                    <td class="money">#}
+{#                        <span id="total{{ i.id }}"></span> МКД#}
+{#                    </td>#}
+                    <td>
+                        <div class="text-center">
+                            <a href="{% url 'deleteFromCart' i.id %}" class="btn btn-danger" id="del{{ i.id }}">x</a>
+                        </div>
                     </td>
 
                 </tr>
@@ -64,7 +70,7 @@
                         <td>Износ:</td>
                         <td class="r1"><span id="totalBefore"></span> МКД</td>
                     </tr>
-                    <tr>
+                    <tr id="dc_display">
                         <td>Попуст (- <span id="dcPercent">0</span>%):</td>
                         <td class="r1">- <span id="dc_total">0</span> МКД</td>
                     </tr>
@@ -160,6 +166,9 @@
         input[type=number]::-webkit-outer-spin-button {
             opacity: 1;
         }
+        #dc_display{
+            display: none;
+        }
     </style>
 
     <script>
@@ -171,11 +180,11 @@
             for (i of keys) {
                 try {
                     var price = document.getElementById("price" + i).innerText
-
-                    var qty = document.getElementById("qt" + i).value
-                    var total = price * qty
-                    totalBefore += total
-                    document.getElementById("total" + i).textContent = total
+                    price = price * 1
+                    {#var qty = document.getElementById("qt" + i).value#}
+                    {#var total = price * qty#}
+                    totalBefore += price //total
+                    {#document.getElementById("total" + i).textContent = total#}
 
                 } catch (i) {
                     continue
@@ -196,6 +205,9 @@
             var input = document.getElementById("id_discount").value
             for (var k = 0; k < discountCodes.length; k++) {
                 if (discountCodes[k] == input) {
+                    document.getElementById("dc_display").style.display = "table-row"
+                    document.getElementById("dc_display").style.backgroundColor = "#8dffca"
+
                     var before = document.getElementById("totalBefore").innerText
                     document.getElementById("dcPercent").innerText = discountTypes[k]
                     var forDiscount = before * (discountTypes[k] / 100)

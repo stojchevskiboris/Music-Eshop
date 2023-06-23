@@ -46,6 +46,7 @@ class Instrument(models.Model):
 class Cart(models.Model):
     usersession = models.CharField(max_length=50)
     instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE)
+    quantity = models.IntegerField(null=True, blank=True)
     discount = models.IntegerField(null=True, blank=True)
     totalprice = models.IntegerField(null=True, blank=True)
 
