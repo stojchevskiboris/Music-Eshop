@@ -3,7 +3,7 @@
 
     <br>
     <div class="row">
-        <div class="col reciept">Сметка бр. <span id="rec_id">25/7</span></div>
+        <div class="col receipt">Сметка бр. <span id="rec_id"></span><span id="rec_id2"></span></div>
         <div class="col header1">Наплата</div>
         <div class="col"></div>
     </div>
@@ -139,7 +139,7 @@
             text-align: -webkit-center;
         }
 
-        .reciept {
+        .receipt {
             text-align: center;
             font-size: 2rem;
             font-weight: bold;
@@ -206,8 +206,9 @@
 
     </style>
     <script>
+        var year = new Date().getFullYear().toString()
         document.getElementById("t2").innerText = total+1000 // neli, za dostava :)
-        document.getElementById("rec_id").innerText = {{ reciept.reciept }}
+        document.getElementById("rec_id").innerText = {{ receipt.receipt }} + "/"+year.slice(2,4)
         function changeFc() {
             var type = document.getElementById("id_paymenttype").value
             if (type === "Credit") {

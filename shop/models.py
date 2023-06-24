@@ -47,6 +47,7 @@ class Instrument(models.Model):
 class Cart(models.Model):
     usersession = models.CharField(max_length=50)
     instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE)
+
     # quantity = models.IntegerField(null=True, blank=True)
     # discount = models.IntegerField(null=True, blank=True)
     # totalprice = models.IntegerField(null=True, blank=True)
@@ -79,15 +80,21 @@ class Customer(models.Model):
         return f'{self.name} {self.surname}'
 
 
+class Receipt(models.Model):
+    receipt = models.IntegerField()
+    session = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.receipt}'
+
+
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    products = ArrayField(models.IntegerField(null=True, blank=True), null=True, blank=True)
+    receipt = models.ForeignKey(Receipt, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Instrument)
+    # products = ArrayField(models.IntegerField(null=True, blank=True), null=True, blank=True)
     # cart = models.ManyToManyField(Cart)
     totalprice = models.IntegerField()
 
     def __str__(self):
-        return f'{self.customer} {self.cart}'
-
-class Reciept(models.Model):
-    reciept = models.IntegerField()
-    session = models.CharField(max_length=50)
+        return f'{self.customer}'

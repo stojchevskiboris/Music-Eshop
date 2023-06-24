@@ -1,6 +1,75 @@
 {% extends 'base.html' %}
 {% block content %}
+    <h1 class="mt-2">Вашата нарачка е успешно примена :)</h1>
+    <br>
+    <h5>Информации за нарачката</h5>
+    <div class="row">
+        <div class="col-4 text-end"> Име и презиме:</div>
+        <div class="col"> {{ customer.name }} {{ customer.surname }} </div>
+    </div>
+    <div class="row">
+        <div class="col-4 text-end"> E-mail:</div>
+        <div class="col"> {{ customer.email }} </div>
+    </div>
+    <div class="row">
+        <div class="col-4 text-end"> Телефон:</div>
+        <div class="col"> {{ customer.phone }} </div>
+    </div>
+    <div class="row">
+        <div class="col-4 text-end"> Адреса:</div>
+        <div class="col"> {{ customer.city }} - {{ customer.municipality }}, {{ customer.address }} </div>
+    </div>
+    <br>
+    <h6>Сметка бр. {{ receipt }}/23</h6>
+    <table>
 
-Final page
+        <tr>
+            <td>#</td>
+            <td>Слика</td>
+            <td>Име</td>
+            <td>Цена</td>
+        </tr>
 
+        {% for p in products %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td style="text-align: center;">
+                    <img class="tableImg" src="{{ MEDIA_URL }}{{ p.image.url }}" alt="Card image cap">
+                </td>
+                <td>{{ p.model }}</td>
+                <td>{{ p.price }}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+
+    <style>
+        .tableImg {
+            width: 50px;
+            height: 100%;
+        }
+
+        table {
+            background-color: white;
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+
+        th {
+            text-align-last: center;
+        }
+
+        td, th {
+            border: 1px solid #000000;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #ececec;
+        }
+    </style>
 {% endblock %}

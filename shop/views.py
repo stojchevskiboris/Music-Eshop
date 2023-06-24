@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Instrument, Cart, Order, Reciept
+from .models import Instrument, Cart, Order, Receipt, Customer
 from django.contrib.sessions.models import Session
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.contrib.auth.models import AnonymousUser, User
@@ -32,7 +32,6 @@ def deleteFromCart(request, i_id):
 
 
 def cart(request):
-
     for row in Cart.objects.all().reverse():
         if Cart.objects.filter(usersession=row.usersession).filter(instrument=row.instrument).count() > 1:
             row.delete()
@@ -42,11 +41,11 @@ def cart(request):
     productids = [o['instrument'] for o in productids]
     products = Instrument.objects.filter(pk__in=productids)
     len = products.count()
-    test = Reciept.objects.filter(session=user).count()
+    test = Receipt.objects.filter(session=user).count()
     if test == 0:
-        recLen = Reciept.objects.count()
-        reciept = Reciept(session=user, reciept=recLen+1)
-        reciept.save()
+        recLen = Receipt.objects.count()
+        receipt = Receipt(session=user, receipt=recLen + 1)
+        receipt.save()
 
     context = {"user": user, "products": products, "len": len}
     return render(request, "cart.html", context)
@@ -67,16 +66,50 @@ def payment(request):
         productids = [o['instrument'] for o in productids]
         products = Instrument.objects.filter(pk__in=productids)
         form = CustomerForm()
-        reciept = Reciept.objects.filter(session=user).first()
-        print(reciept)
-    context = {"form": form, "products":products, "reciept":reciept}
+        receipt = Receipt.objects.filter(session=user).first()
+        print(receipt)
+    context = {"form": form, "products": products, "receipt": receipt}
     return render(request, 'payment.html', context)
 
 
 def final(request):
-    # order = Order(customer=)
-    return render(request, 'final.html')
+    sessionNow = request.session.session_key
+    customer = Customer.objects.filter(customersession=sessionNow).first()
+    receipt = Receipt.objects.filter(session=sessionNow).first()
 
+    productids = Cart.objects.filter(usersession=sessionNow).values("instrument")
+    productids = list(productids)
+    productids = [o['instrument'] for o in productids]
+    products = Instrument.objects.filter(pk__in=productids)
+    total = 1000 #innitialy for shipment
+    for p in products:
+        pr = Instrument.objects.get(pk = p.id)
+        pr.quantity = pr.quantity-1
+        pr.save()
+        total += p.price
+    order = Order(customer=customer, receipt=receipt, totalprice=total)
+    order.save()
+    order.products.set(products)
+    order.save()
+    # context = {"total":total, "products":products, "customer":customer, "receipt":receipt}
+    # return render(request, 'final.html', context=context)
+    return redirect('finalview')
+
+def finalview(request):
+    sessionNow = request.session.session_key
+    customer = Customer.objects.filter(customersession=sessionNow).first()
+    receipt = Receipt.objects.filter(session=sessionNow).first()
+
+    productids = Cart.objects.filter(usersession=sessionNow).values("instrument")
+    productids = list(productids)
+    productids = [o['instrument'] for o in productids]
+    products = Instrument.objects.filter(pk__in=productids)
+    total = 1000  # innitialy for shipment
+    for p in products:
+        total += p.price
+
+    context = {"total":total, "products":products, "customer":customer, "receipt":receipt}
+    return render(request, 'final.html', context=context)
 
 def categories(request):
     return render(request, 'categories.html')

@@ -37,6 +37,7 @@ urlpatterns = [
     path('add/', views.add, name="add"),
     path('payment/', views.payment, name="payment"),
     path('paymentcomplete/', views.final, name="final"),
+    path('paymentcompleteview/', views.finalview, name="finalview"),
 
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/profile/", views.loginView, name="loginView"),
