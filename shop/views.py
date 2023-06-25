@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from .models import Instrument, Cart, Order, Receipt, Customer
 from django.contrib.sessions.models import Session
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
@@ -14,24 +14,36 @@ def index(request):
 
 
 def addToCart(request, i_id):
+    # Check session
+    if request.session.session_key == None:
+        return redirect('index')
+    # End check session
+
     session = request.session.session_key
     instrumentToAdd = Instrument.objects.filter(pk=i_id)[0]
-    print(instrumentToAdd)
     newItem = Cart(usersession=session, instrument=instrumentToAdd)
     newItem.save()
     return redirect('cart')
 
 
 def deleteFromCart(request, i_id):
+    # Check session
+    if request.session.session_key == None:
+        return redirect('index')
+    # End check session
+
     session = request.session.session_key
     instrumentToDelete = Instrument.objects.filter(pk=i_id)[0]
-    print(instrumentToDelete)
     deleteItem = Cart.objects.filter(usersession=session, instrument=instrumentToDelete).all()
     deleteItem.delete()
     return redirect('cart')
 
 
 def cart(request):
+    # Check session
+    if request.session.session_key == None:
+        return redirect('index')
+    # End check session
     for row in Cart.objects.all().reverse():
         if Cart.objects.filter(usersession=row.usersession).filter(instrument=row.instrument).count() > 1:
             row.delete()
@@ -47,11 +59,22 @@ def cart(request):
         receipt = Receipt(session=user, receipt=recLen + 1)
         receipt.save()
 
-    context = {"user": user, "products": products, "len": len}
+    recContext = Receipt.objects.filter(session=user).first()
+    context = {"user": user, "products": products, "len": len, "receipt": recContext}
+
+    if recContext.discountpercent != None:
+        percent = recContext.discountpercent
+        context = {"user": user, "products": products, "len": len, "receipt": recContext, "percent": percent}
+
     return render(request, "cart.html", context)
 
 
 def payment(request):
+    # Check session
+    if request.session.session_key == None:
+        return redirect('index')
+    # End check session
+
     if request.method == 'POST':
         form = CustomerForm(request.POST)
         if form.is_valid():
@@ -67,12 +90,21 @@ def payment(request):
         products = Instrument.objects.filter(pk__in=productids)
         form = CustomerForm()
         receipt = Receipt.objects.filter(session=user).first()
-        print(receipt)
+
     context = {"form": form, "products": products, "receipt": receipt}
+    if receipt.discountpercent != None:
+        percent = receipt.discountpercent / 100
+        context = {"form": form, "products": products, "receipt": receipt, "percent": percent}
+
     return render(request, 'payment.html', context)
 
 
 def final(request):
+    # Check session
+    if request.session.session_key == None:
+        return redirect('index')
+    # End check session
+
     sessionNow = request.session.session_key
     customer = Customer.objects.filter(customersession=sessionNow).first()
     receipt = Receipt.objects.filter(session=sessionNow).first()
@@ -81,21 +113,35 @@ def final(request):
     productids = list(productids)
     productids = [o['instrument'] for o in productids]
     products = Instrument.objects.filter(pk__in=productids)
-    total = 1000 #innitialy for shipment
+    total = 0
     for p in products:
-        pr = Instrument.objects.get(pk = p.id)
-        pr.quantity = pr.quantity-1
+        pr = Instrument.objects.get(pk=p.id)
+        pr.quantity = pr.quantity - 1
         pr.save()
         total += p.price
+
+    if receipt.discountpercent != None:
+        percent1 = receipt.discountpercent / 100
+        toReduce = total * percent1
+        total -= toReduce
+
+    total += 1000
     order = Order(customer=customer, receipt=receipt, totalprice=total)
     order.save()
     order.products.set(products)
     order.save()
+
     # context = {"total":total, "products":products, "customer":customer, "receipt":receipt}
     # return render(request, 'final.html', context=context)
     return redirect('finalview')
 
+
 def finalview(request):
+    # Check session
+    if request.session.session_key == None:
+        return redirect('index')
+    # End check session
+
     sessionNow = request.session.session_key
     customer = Customer.objects.filter(customersession=sessionNow).first()
     receipt = Receipt.objects.filter(session=sessionNow).first()
@@ -107,9 +153,23 @@ def finalview(request):
     total = 1000  # innitialy for shipment
     for p in products:
         total += p.price
-
-    context = {"total":total, "products":products, "customer":customer, "receipt":receipt}
+    request.session.flush()
+    context = {"total": total, "products": products, "customer": customer, "receipt": receipt}
     return render(request, 'final.html', context=context)
+
+
+def discount(request, percent):
+    # Check session
+    if request.session.session_key == None:
+        return redirect('index')
+    # End check session
+    user = request.session.session_key
+    reciept = Receipt.objects.filter(session=user).first()
+    reciept.discountpercent = percent
+    reciept.save()
+    strpercent = str(percent)
+    return redirect(reverse('cart') + '?p=' + strpercent)
+
 
 def categories(request):
     return render(request, 'categories.html')

@@ -10,10 +10,10 @@
             <tr>
                 <th>Слика</th>
                 <th>Име на продуктот</th>
-{#                <th>Количина</th>#}
+                {#                <th>Количина</th>#}
                 <th>Цена</th>
                 <th></th>
-{#                <th>Вкупна цена</th>#}
+                {#                <th>Вкупна цена</th>#}
             </tr>
             {% for i in products %}
                 <script>
@@ -26,21 +26,21 @@
                     <td>
                         {{ i.manufacturer }} {{ i.model }}
                     </td>
-{#                    <td>#}
-{#                        <div class="input-group">#}
-{#                            <input onchange="updateTotal(); checkDiscount() " value="1" min="1" max="{{ i.quantity }}"#}
-{#                                   class="form-control edit-items"#}
-{#                                   type="number"#}
-{#                                   id="qt{{ i.id }}">#}
-{#                            <a href="{% url 'deleteFromCart' i.id %}" class="btn btn-danger" id="del{{ i.id }}">x</a>#}
-{#                        </div>#}
-{#                    </td>#}
+                    {#                    <td>#}
+                    {#                        <div class="input-group">#}
+                    {#                            <input onchange="updateTotal(); checkDiscount() " value="1" min="1" max="{{ i.quantity }}"#}
+                    {#                                   class="form-control edit-items"#}
+                    {#                                   type="number"#}
+                    {#                                   id="qt{{ i.id }}">#}
+                    {#                            <a href="{% url 'deleteFromCart' i.id %}" class="btn btn-danger" id="del{{ i.id }}">x</a>#}
+                    {#                        </div>#}
+                    {#                    </td>#}
                     <td class="money">
                         <span id="price{{ i.id }}">{{ i.price }}</span> МКД
                     </td>
-{#                    <td class="money">#}
-{#                        <span id="total{{ i.id }}"></span> МКД#}
-{#                    </td>#}
+                    {#                    <td class="money">#}
+                    {#                        <span id="total{{ i.id }}"></span> МКД#}
+                    {#                    </td>#}
                     <td>
                         <div class="text-center">
                             <a href="{% url 'deleteFromCart' i.id %}" class="btn btn-danger" id="del{{ i.id }}">x</a>
@@ -60,6 +60,7 @@
                     <button onclick="checkDiscount()" class="btn btn-primary" type="button">Внеси</button>
                 </div>
                 <p id="dc_message">Кодот <span id="codeDc"></span> е успешно внесен</p>
+                <a id="discountClick" style="display: none" href="#">S</a>
             </div>
             <div class="col-1"></div>
 
@@ -95,6 +96,7 @@
             <a href="{% url 'categories' %}" class="btn btn-primary mt-2 mb-4 w-50 fw-bold fs-4">Пребарај производи</a>
         </div>
     {% endif %}
+
 
 
     <style>
@@ -166,14 +168,17 @@
         input[type=number]::-webkit-outer-spin-button {
             opacity: 1;
         }
-        #dc_display{
+
+        #dc_display {
             display: none;
         }
     </style>
 
     <script>
-        console.log(keys)
         document.getElementById("cartimg").src = "/data/static/cart-white.png";
+        const urlParams = new URLSearchParams(window.location.search);
+        const myParam = urlParams.get('p');
+
 
         function updateTotal() {
             var totalBefore = 0
@@ -192,7 +197,6 @@
             }
             document.getElementById("totalBefore").innerText = totalBefore
             var discount = document.getElementById("dc_total").innerText
-            console.log(discount)
             var totalAfter = totalBefore - discount + 1000
             document.getElementById("totalAfter").innerText = totalAfter
         }
@@ -205,15 +209,9 @@
             var input = document.getElementById("id_discount").value
             for (var k = 0; k < discountCodes.length; k++) {
                 if (discountCodes[k] == input) {
-                    document.getElementById("dc_display").style.display = "table-row"
-                    document.getElementById("dc_display").style.backgroundColor = "#8dffca"
+                    document.getElementById("discountClick").setAttribute("href", "discount/" + discountTypes[k])
+                    document.getElementById("discountClick").click()
 
-                    var before = document.getElementById("totalBefore").innerText
-                    document.getElementById("dcPercent").innerText = discountTypes[k]
-                    var forDiscount = before * (discountTypes[k] / 100)
-                    document.getElementById("dc_total").innerText = forDiscount
-                    document.getElementById("dc_message").style.display = 'block'
-                    document.getElementById("codeDc").innerText = input
                 }
 
             }
@@ -221,14 +219,38 @@
         }
 
 
+        {#document.getElementsByClassName('edit-items')[0].oninput = function () {#}
+        {#    var max = parseInt(this.max);#}
+        {##}
+        {#    if (parseInt(this.value) > max) {#}
+        {#        this.value = max;#}
+        {#    }#}
+        {# } #}
 
-        document.getElementsByClassName('edit-items')[0].oninput = function () {
-            var max = parseInt(this.max);
-
-            if (parseInt(this.value) > max) {
-                this.value = max;
-            }
+        if (myParam != null) {
+            document.getElementById("dc_display").style.display = "table-row"
+            document.getElementById("dc_display").style.backgroundColor = "#8dffca"
+            var before = document.getElementById("totalBefore").innerText
+            document.getElementById("dcPercent").innerText = myParam
+            var forDiscount = before * (myParam / 100)
+            document.getElementById("dc_total").innerText = forDiscount
+            document.getElementById("dc_message").style.display = 'block'
+            var totalAfter = before - forDiscount + 1000
+            document.getElementById("totalAfter").innerText = totalAfter
         }
+        {% if percent %}
+            var qparam = {{ percent }}
+            document.getElementById("dc_display").style.display = "table-row"
+            document.getElementById("dc_display").style.backgroundColor = "#8dffca"
+            var before = document.getElementById("totalBefore").innerText
+            document.getElementById("dcPercent").innerText = qparam
+            var forDiscount = before * (qparam / 100)
+            document.getElementById("dc_total").innerText = forDiscount
+            document.getElementById("dc_message").style.display = 'block'
+            var totalAfter = before - forDiscount + 1000
+            document.getElementById("totalAfter").innerText = totalAfter
+        {% endif %}
+
 
     </script>
 {% endblock %}

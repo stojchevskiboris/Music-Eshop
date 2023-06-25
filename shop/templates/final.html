@@ -27,7 +27,7 @@
             <td>#</td>
             <td>Слика</td>
             <td>Име</td>
-            <td>Цена</td>
+{#            <td>Цена</td>#}
         </tr>
 
         {% for p in products %}
@@ -37,7 +37,7 @@
                     <img class="tableImg" src="{{ MEDIA_URL }}{{ p.image.url }}" alt="Card image cap">
                 </td>
                 <td>{{ p.model }}</td>
-                <td>{{ p.price }}</td>
+{#                <td>{{ p.price }}</td>#}
             </tr>
         {% endfor %}
 

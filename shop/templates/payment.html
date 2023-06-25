@@ -206,8 +206,12 @@
 
     </style>
     <script>
+        var toReduce = 0
+        {% if percent %}
+            toReduce = total * {{ percent }}
+        {% endif %}
         var year = new Date().getFullYear().toString()
-        document.getElementById("t2").innerText = total+1000 // neli, za dostava :)
+        document.getElementById("t2").innerText = total+1000-toReduce // neli, za dostava :)
         document.getElementById("rec_id").innerText = {{ receipt.receipt }} + "/"+year.slice(2,4)
         function changeFc() {
             var type = document.getElementById("id_paymenttype").value

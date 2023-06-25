@@ -83,6 +83,7 @@ class Customer(models.Model):
 class Receipt(models.Model):
     receipt = models.IntegerField()
     session = models.CharField(max_length=50)
+    discountpercent = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.receipt}'
