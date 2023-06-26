@@ -112,7 +112,7 @@
             <div class="col">
                 <div class="totalPrice">
                     <p id="t1">Вкупно за наплата:</p>
-                    <p id="p2"><span id="t2">26,200</span> ден</p>
+                    <p id="p2"><span class="formatMoney" id="t2">26,200</span> ден</p>
                 </div>
                 <br>
                 <button id="bt2" class="btn btn-success">Нарачај</button>
@@ -128,7 +128,8 @@
     </script>
     {% for p in products %}
         <script>
-            total += {{ p.price }}
+            total +=
+            {{ p.price }}
         </script>
     {% endfor %}
 
@@ -211,8 +212,9 @@
             toReduce = total * {{ percent }}
         {% endif %}
         var year = new Date().getFullYear().toString()
-        document.getElementById("t2").innerText = total+1000-toReduce // neli, za dostava :)
-        document.getElementById("rec_id").innerText = {{ receipt.receipt }} + "/"+year.slice(2,4)
+        document.getElementById("t2").innerText = total + 1000 - toReduce // neli, za dostava :)
+        document.getElementById("rec_id").innerText = {{ receipt.receipt }} +"/" + year.slice(2, 4)
+
         function changeFc() {
             var type = document.getElementById("id_paymenttype").value
             if (type === "Credit") {
@@ -253,5 +255,12 @@
                 'width': ($("#t1").width() + 40 + 'px')
             });
         });
+        const elements = document.getElementsByClassName("formatMoney");
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const content = element.textContent;
+            const formattedContent = Number(content).toLocaleString();
+            element.textContent = formattedContent;
+        }
     </script>
 {% endblock %}

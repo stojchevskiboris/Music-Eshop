@@ -2,5 +2,68 @@
 {% block content %}
 
 
+    <nav class="mt-1" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'categories' %}">Категории</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'udarni' %}">Ударни Инструменти</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Кахони</li>
+        </ol>
+    </nav>
+
+    <h2 class="text-center">Кахони</h2>
+    <br>
+    <div class="row">
+
+        {% for i in products %}
+            <div class="card m-3" style="width: 18rem;">
+                <img class="card-img-top mt-2" src="{{ MEDIA_URL }}{{ i.image.url }}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{ i.manufacturer }} {{ i.model }}</h5>
+
+
+                </div>
+                <div class="text-end moneyFont pb-3">
+                    <span class="formatMoney">{{ i.price }}</span> МКД
+                    <a title="Додај во кошничка" href="{% url 'addToCart' i.id %}" class="btn btn-outline-secondary"><img width="25"
+                                                                                                src="/data/static/addToCart.png"></a>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <style>
+        .card {
+            margin: 5px;
+        }
+
+        .row {
+            place-content: center;
+        }
+
+        .moneyFont {
+            font-size: 1.5rem;
+        }
+                .card {
+            background-color: #caf1ff;
+        }
+
+        .card {
+            box-shadow: 3px 3px 10px gray;
+            background-color: #ace3f782;
+            border: 2px solid gray;
+            border-radius: 15px;
+        }
+    </style>
+    <script>
+        const elements = document.getElementsByClassName("formatMoney");
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const content = element.textContent;
+            const formattedContent = Number(content).toLocaleString();
+            element.textContent = formattedContent;
+        }
+    </script>
 
 {% endblock %}

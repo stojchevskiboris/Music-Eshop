@@ -36,7 +36,7 @@
                     {#                        </div>#}
                     {#                    </td>#}
                     <td class="money">
-                        <span id="price{{ i.id }}">{{ i.price }}</span> МКД
+                        <span class="formatMoney" id="price{{ i.id }}">{{ i.price }}</span> МКД
                     </td>
                     {#                    <td class="money">#}
                     {#                        <span id="total{{ i.id }}"></span> МКД#}
@@ -69,19 +69,19 @@
                     <tbody>
                     <tr>
                         <td>Износ:</td>
-                        <td class="r1"><span id="totalBefore"></span> МКД</td>
+                        <td class="r1"><span class="formatMoney" id="totalBefore"></span> МКД</td>
                     </tr>
                     <tr id="dc_display">
                         <td>Попуст (- <span id="dcPercent">0</span>%):</td>
-                        <td class="r1">- <span id="dc_total">0</span> МКД</td>
+                        <td class="r1">- <span class="formatMoney" id="dc_total">0</span> МКД</td>
                     </tr>
                     <tr>
                         <td>Испорака:</td>
-                        <td class="r1">1000 МКД</td>
+                        <td class="r1">1,000 МКД</td>
                     </tr>
                     <tr>
                         <td><b>Вкупно за наплата:</b></td>
-                        <td class="r1"><b><span id="totalAfter"></span> МКД</b></td>
+                        <td class="r1"><b><span class="formatMoney" id="totalAfter"></span> МКД</b></td>
                     </tr>
                     </tbody>
                 </table>
@@ -240,7 +240,7 @@
         }
         {% if percent %}
             var qparam = {{ percent }}
-            document.getElementById("dc_display").style.display = "table-row"
+                document.getElementById("dc_display").style.display = "table-row"
             document.getElementById("dc_display").style.backgroundColor = "#8dffca"
             var before = document.getElementById("totalBefore").innerText
             document.getElementById("dcPercent").innerText = qparam
@@ -251,6 +251,13 @@
             document.getElementById("totalAfter").innerText = totalAfter
         {% endif %}
 
-
+        {#document.getElementsByClassName("formatMoney").toLocaleString()#}
+        const elements = document.getElementsByClassName("formatMoney");
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const content = element.textContent;
+            const formattedContent = Number(content).toLocaleString();
+            element.textContent = formattedContent;
+        }
     </script>
 {% endblock %}

@@ -5,7 +5,7 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out, user_lo
 from django.contrib.auth.models import AnonymousUser, User
 from .forms import InstrumentForm, CustomerForm
 from django.contrib.auth.decorators import login_required
-
+from django.core.paginator import Paginator
 
 def index(request):
     if request.user.is_anonymous:
@@ -79,6 +79,12 @@ def payment(request):
         form = CustomerForm(request.POST)
         if form.is_valid():
             customer = form.save(commit=False)
+            if customer.paymenttype == "Credit":
+                # prevent saving real card information for prototype
+                customer.cardholdername = 'Encrypted information'
+                customer.cardnumber = 'Encrypted information'
+                customer.cardexpiry = 'Encrypted information'
+                customer.cardcvv = 'Encrypted information'
             customer.customersession = request.session.session_key
             form.save()
             return redirect('final')
@@ -182,10 +188,11 @@ def contact(request):
 def about(request):
     return render(request, 'about.html')
 
-
+@login_required
 def instruments(request):
     queryset = Instrument.objects.all()
-    context = {"instruments": queryset}
+    len1 = Instrument.objects.count()
+    context = {"instruments": queryset,"len":len1}
     return render(request, 'instruments.html', context)
 
 
@@ -195,8 +202,9 @@ def add(request):
         form = InstrumentForm(request.POST, request.FILES)
         if form.is_valid():
             instrument = form.save(commit=False)
+
             form.save()
-            return redirect('index')
+            return redirect('add')
     else:
         form = InstrumentForm()
 
@@ -235,65 +243,98 @@ def klavijatura(request):
     return render(request, 'products/klavijatura.html')
 
 
+
 def violina(request):
-    return render(request, 'products/zicani/violina.html')
+    products = Instrument.objects.filter(type="Violina")
+    context = {"products": products}
+    return render(request, 'products/zicani/violina.html', context)
 
 
 def gitara(request):
-    return render(request, 'products/zicani/gitara.html')
+    products = Instrument.objects.filter(type="Gitara")
+    context = {"products":products}
+    return render(request, 'products/zicani/gitara.html', context)
 
 
 def kontrabas(request):
-    return render(request, 'products/zicani/kontrabas.html')
+    products = Instrument.objects.filter(type="Kontrabas")
+    context = {"products":products}
+    return render(request, 'products/zicani/kontrabas.html', context)
 
 
 def harfa(request):
-    return render(request, 'products/zicani/harfa.html')
+    products = Instrument.objects.filter(type="Harfa")
+    context = {"products": products}
+    return render(request, 'products/zicani/harfa.html', context)
 
 
 def mandolina(request):
-    return render(request, 'products/zicani/mandolina.html')
+    products = Instrument.objects.filter(type="Mandolina")
+    context = {"products": products}
+    return render(request, 'products/zicani/mandolina.html', context)
 
 
 def violoncelo(request):
-    return render(request, 'products/zicani/violoncelo.html')
+    products = Instrument.objects.filter(type="Violoncelo")
+    context = {"products": products}
+    return render(request, 'products/zicani/violoncelo.html', context)
 
 
 def flejta(request):
-    return render(request, 'products/duvacki/flejta.html')
+    products = Instrument.objects.filter(type="Flejta")
+    context = {"products": products}
+    return render(request, 'products/duvacki/flejta.html', context)
 
 
 def klarinet(request):
-    return render(request, 'products/duvacki/klarinet.html')
+    products = Instrument.objects.filter(type="Klarinet")
+    context = {"products": products}
+    return render(request, 'products/duvacki/klarinet.html', context)
 
 
 def saksofon(request):
-    return render(request, 'products/duvacki/saksofon.html')
+    products = Instrument.objects.filter(type="Saksofon")
+    context = {"products": products}
+    return render(request, 'products/duvacki/saksofon.html', context)
 
 
 def truba(request):
-    return render(request, 'products/duvacki/truba.html')
+    products = Instrument.objects.filter(type="Truba")
+    context = {"products": products}
+    return render(request, 'products/duvacki/truba.html', context)
 
 
 def tapani(request):
-    return render(request, 'products/udarni/tapani.html')
+    products = Instrument.objects.filter(type="Tapani")
+    context = {"products": products}
+    return render(request, 'products/udarni/tapani.html', context)
 
 
 def ksilofon(request):
-    return render(request, 'products/udarni/ksilofon.html')
+    products = Instrument.objects.filter(type="Ksilofon")
+    context = {"products": products}
+    return render(request, 'products/udarni/ksilofon.html', context)
 
 
 def kahoni(request):
-    return render(request, 'products/udarni/kahoni.html')
+    products = Instrument.objects.filter(type="Kahoni")
+    context = {"products": products}
+    return render(request, 'products/udarni/kahoni.html', context)
 
 
 def harmonika(request):
-    return render(request, 'products/klavijatura/harmonika.html')
+    products = Instrument.objects.filter(type="Harmonika")
+    context = {"products": products}
+    return render(request, 'products/klavijatura/harmonika.html', context)
 
 
 def pijano(request):
-    return render(request, 'products/klavijatura/pijano.html')
+    products = Instrument.objects.filter(type="Pijano")
+    context = {"products": products}
+    return render(request, 'products/klavijatura/pijano.html', context)
 
 
 def sintisajzer(request):
-    return render(request, 'products/klavijatura/sintisajzer.html')
+    products = Instrument.objects.filter(type="Sintisajzer")
+    context = {"products": products}
+    return render(request, 'products/klavijatura/sintisajzer.html', context)

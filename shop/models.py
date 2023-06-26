@@ -38,7 +38,7 @@ class Instrument(models.Model):
     description = models.TextField(blank=True, null=True)
     quantity = models.IntegerField()
     price = models.IntegerField()
-    image = models.ImageField(upload_to='images/', null=True, blank=True)
+    image = models.ImageField(upload_to='images/')
 
     def __str__(self):
         return f'{self.manufacturer} {self.model}'
