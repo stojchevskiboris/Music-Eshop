@@ -3,8 +3,6 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
-# Create your models here.
-
 class Instrument(models.Model):
     class Categories(models.TextChoices):
         ZHICHANI = "Zhichani", "Жичани"
@@ -32,7 +30,6 @@ class Instrument(models.Model):
 
     category = models.CharField(max_length=11, choices=Categories.choices, default=Categories.ZHICHANI)
     type = models.CharField(max_length=12, choices=Types.choices, default=Types.GITARA)
-    # type = models.CharField(max_length=80)
     manufacturer = models.CharField(max_length=80)
     model = models.CharField(max_length=80)
     description = models.TextField(blank=True, null=True)
@@ -47,10 +44,7 @@ class Instrument(models.Model):
 class Cart(models.Model):
     usersession = models.CharField(max_length=50)
     instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE)
-
     # quantity = models.IntegerField(null=True, blank=True)
-    # discount = models.IntegerField(null=True, blank=True)
-    # totalprice = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.usersession} {self.instrument}'
@@ -96,6 +90,13 @@ class Order(models.Model):
     # products = ArrayField(models.IntegerField(null=True, blank=True), null=True, blank=True)
     # cart = models.ManyToManyField(Cart)
     totalprice = models.IntegerField()
+    orderdate = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.customer}'
+
+
+class Message(models.Model):
+    name = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    message = models.TextField()

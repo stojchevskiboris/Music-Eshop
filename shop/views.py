@@ -3,9 +3,10 @@ from .models import Instrument, Cart, Order, Receipt, Customer
 from django.contrib.sessions.models import Session
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.contrib.auth.models import AnonymousUser, User
-from .forms import InstrumentForm, CustomerForm
+from .forms import InstrumentForm, CustomerForm, MessageForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+
 
 def index(request):
     if request.user.is_anonymous:
@@ -182,17 +183,26 @@ def categories(request):
 
 
 def contact(request):
-    return render(request, 'contact.html')
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('contact') + '?sent=true')
+    else:
+        form = MessageForm()
+        context = {"form": form}
+        return render(request, 'contact.html', context)
 
 
 def about(request):
     return render(request, 'about.html')
 
+
 @login_required
 def instruments(request):
     queryset = Instrument.objects.all()
     len1 = Instrument.objects.count()
-    context = {"instruments": queryset,"len":len1}
+    context = {"instruments": queryset, "len": len1}
     return render(request, 'instruments.html', context)
 
 
@@ -243,7 +253,6 @@ def klavijatura(request):
     return render(request, 'products/klavijatura.html')
 
 
-
 def violina(request):
     products = Instrument.objects.filter(type="Violina")
     context = {"products": products}
@@ -252,13 +261,13 @@ def violina(request):
 
 def gitara(request):
     products = Instrument.objects.filter(type="Gitara")
-    context = {"products":products}
+    context = {"products": products}
     return render(request, 'products/zicani/gitara.html', context)
 
 
 def kontrabas(request):
     products = Instrument.objects.filter(type="Kontrabas")
-    context = {"products":products}
+    context = {"products": products}
     return render(request, 'products/zicani/kontrabas.html', context)
 
 
